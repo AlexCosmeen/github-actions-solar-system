@@ -55,3 +55,25 @@ jobs:
         name: Code-Coverage-Result
         path: coverage
         retention-days: 5
+  docker:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout Repository
+        uses: actions/checkout@v4
+
+      - name: Login to Docker Hub
+        uses: docker/login-action@v4
+        with:
+          registry: ghcr.io
+          username: ${{ github.repository_owner }}
+          password: ${{ secrets.GITHUB_TOKEN }}
+      
+      - name: Set lowercase for USERNAME
+          run: echo "USERNAME=$(echo '${{ github.repository_owner }}' | tr '[:upper:]' '[:lower:]')" >> "$GITHUB_ENV"
+
+      - name: Build and push
+        uses: docker/build-push-action@v7
+        with:
+          push: true
+          tags: ghcr.io/${USERNAME}/solar-system:${{ github.sha }}
+
