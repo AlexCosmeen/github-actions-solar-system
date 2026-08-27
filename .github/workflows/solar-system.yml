@@ -23,6 +23,11 @@ jobs:
         uses: actions/setup-node@v4
         with:
           node-version: 20
+      - name: Add cache for installing dep
+        uses: actions/cache@v6
+        with:
+          path: ~/.npm
+          key: ${{ runner.os }}-node-${{ github.sha }}
       - name: Install Dependencies
         run: npm install
       - name: Unit Testing
